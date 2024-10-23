@@ -2,7 +2,7 @@
 
 ## 使用
 
-`python run.py --datapath="your path of dataset"`
+`python run.py --datapath="your path of dataset" --model="PureKAN"`
 
 ## 文件说明
 
@@ -12,7 +12,7 @@
 
 ### data_handler.py
 
-数据读取及预处理，包括去缺失值、标准化、Winsorize
+数据读取及预处理，包括去缺失值、标准化、Winsorize.
 
 ### models.py
 
