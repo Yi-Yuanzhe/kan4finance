@@ -1,2 +1,2 @@
-# kan4finanical
+# kan4finance
  
