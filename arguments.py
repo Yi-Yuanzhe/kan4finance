@@ -34,7 +34,7 @@ def arg_parse():
         batch       = 10000,
         lamb        = 0.003,
         lr          = 0.00447,
-        n_epoch     = 100,
+        n_epoch     = 1,
         steps       = 100,
         width       = [8, 8, 1],
         grid        = 3,
