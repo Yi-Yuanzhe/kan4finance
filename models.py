@@ -46,7 +46,8 @@ class PureKAN():
                          device = self.args.device)
     
     def train_model(self, dataset:Tensor):
-        dataset = DataHandler.get_dataset()
+        # dataset = DataHandler.get_dataset()
+        self._init_model()
 
         opt         = self.args.opt
         update_grid = self.args.update_grid
