@@ -12,7 +12,7 @@ args.device = torch.device(args.device)
 MODEL = get_model_type(args)
 model = MODEL(args)
 
-data_handler = DataHandler(args.datapath)
+data_handler = DataHandler(args)
 dataset      = data_handler.get_dataset()
 
 model.train_model(dataset)

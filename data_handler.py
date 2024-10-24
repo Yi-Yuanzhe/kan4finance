@@ -7,8 +7,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 class DataHandler:
-    def __init__(self, data_path):
-        self.data_path = data_path
+    def __init__(self, args):
+        self.args = args
+        self.data_path = self.args.datapath
+        self.device    = self.args.device
 
     def load_data(self):
         # Load csv
@@ -28,18 +30,25 @@ class DataHandler:
         train_label_df    = train_df[['ExRet']]
         test_label_df     = test_df[['ExRet']]
 
-        train_feature_tensor = torch.tensor(train_features_df.values, dtype=torch.float32)
-        train_label_tensor   = torch.tensor(train_label_df.values, dtype=torch.float32)
+        train_feature_tensor = torch.tensor(train_features_df.values, dtype=torch.float32).to(self.device)
+        train_label_tensor   = torch.tensor(train_label_df.values, dtype=torch.float32).to(self.device)
 
-        test_feature_tensor  = torch.tensor(test_features_df.values, dtype=torch.float32)
-        test_label_tensor    = torch.tensor(test_label_df.values, dtype=torch.float32)
+        test_feature_tensor  = torch.tensor(test_features_df.values, dtype=torch.float32).to(self.device)
+        test_label_tensor    = torch.tensor(test_label_df.values, dtype=torch.float32).to(self.device)
 
         # Winsorize
         def winsorize_tensor(tensor, lower_quantile=0.01, upper_quantile=0.99):
             lower_bounds = torch.quantile(tensor, lower_quantile, dim=0)
             upper_bounds = torch.quantile(tensor, upper_quantile, dim=0)
             
-            tensor_winsorized = torch.clamp(tensor, min=lower_bounds, max=upper_bounds)
+            # get torch version for safe Winsorize
+            torch_version = torch.__version__.split("+")[0]
+
+            if torch_version >= "1.9.0":
+                tensor_winsorized = torch.clamp(tensor, min=lower_bounds, max=upper_bounds)
+            else:
+                tensor_winsorized = torch.where(tensor < lower_bounds, lower_bounds, tensor)
+                tensor_winsorized = torch.where(tensor_winsorized > upper_bounds, upper_bounds, tensor_winsorized)
             
             return tensor_winsorized
         
